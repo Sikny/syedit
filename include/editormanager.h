@@ -8,6 +8,7 @@
 #include <QFont>
 #include <QFileInfo>
 #include <QList>
+#include <QTabBar>
 
 #include "editor.h"
 #include "highlighter.h"
@@ -26,7 +27,6 @@ public slots:
   int getSyntaxHighlighterIndexFor(QString language);
 
 private:
-  QSignalMapper *signalMapper;
   int tabSize;
   QFont defaultFont;
   QList<Highlighter*> *syntaxHighlighters;

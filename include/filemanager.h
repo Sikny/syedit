@@ -14,14 +14,12 @@
 
 class FileManager{
 public:
-  FileManager(Workspace * workspace);
+  FileManager();
   void openFile(std::string file, EditorManager* editor);
   QString addFile(std::string file);
   void newFile(std::string file, EditorManager* editor);
-  void createProject(Project * project);
 private:
   QList<QFileInfo*> *openedFiles;
-  Workspace * workspace;
 
   const QString projExt = ".syk";
 };

@@ -1,5 +1,9 @@
 QT += gui core widgets
 
+MOC_DIR = mocs/
+
+OBJECTS_DIR = objs/
+
 SOURCES += source/main.cpp\
   source/mainwindow.cpp\
   source/editormanager.cpp\

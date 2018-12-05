@@ -1,8 +1,7 @@
 #include "filemanager.h"
 
-FileManager::FileManager(Workspace * workspace){
+FileManager::FileManager(){
   openedFiles = new QList<QFileInfo*>();
-  this->workspace = workspace;
 }
 
 void FileManager::openFile(std::string file, EditorManager* editor){
@@ -47,18 +46,4 @@ void FileManager::newFile(std::string file, EditorManager* editor){
   }
   QString title = addFile(file);
   editor->newTab(title, "");
-}
-
-void FileManager::createProject(Project * project){
-  project->mkdir(project->absolutePath());
-  QDir::setCurrent(project->absolutePath());
-  QFile *projectFile = new QFile(project->getProjectName()+projExt);
-  project->addFile(projectFile);
-  std::ofstream os;
-  os.open((project->absolutePath()+"/"+projectFile->fileName()).toStdString().c_str(),
-    std::ios_base::out | std::ios_base::binary);
-  os.write(project->getLanguage().toStdString().c_str(), project->getLanguage().size());
-  os << std::endl;
-  os.close();
-  workspace->openProject(project);
 }

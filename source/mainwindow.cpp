@@ -6,27 +6,18 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent){
   buildCentralWidget();
   buildStatusBar();
   buildDockWidgets();
-  fileManager = new FileManager(workspace);
-  connect(workspace->getView(), SIGNAL(doubleClicked(QModelIndex)), this, SLOT(edit(QModelIndex)));
+  fileManager = new FileManager();
 }
 
 void MainWindow::buildMenuBar(){
   fileMenu = menuBar()->addMenu(tr("&File"));
   // New
-  newSMenu = fileMenu->addMenu(tr("New"));
-  newProject = newSMenu->addAction(tr("Project"));
-  newProject->setShortcut(tr("ctrl+n"));
-  connect(newProject, SIGNAL(triggered()), this, SLOT(createNewProject()));
-  newFile = newSMenu->addAction(tr("File"));
-  newFile->setShortcut(tr("ctrl+shift+n"));
+  newFile = fileMenu->addAction(tr("New File..."));
+  newFile->setShortcut(tr("ctrl+n"));
   connect(newFile, SIGNAL(triggered()), this, SLOT(addNewFile()));
   // Open
-  openSMenu = fileMenu->addMenu(tr("Open"));
-  openProject = openSMenu->addAction(tr("Project"));
-  openProject->setShortcut(tr("ctrl+o"));
-  connect(openProject, SIGNAL(triggered()), this, SLOT(openExistingFolderProject()));
-  openFile = openSMenu->addAction(tr("File"));
-  openFile->setShortcut(tr("ctrl+shift+o"));
+  openFile = fileMenu->addAction(tr("Open File..."));
+  openFile->setShortcut(tr("ctrl+o"));
   connect(openFile, SIGNAL(triggered()), this, SLOT(openExistingFile()));
   // Quit
   quit = fileMenu->addAction(tr("&Quit"));
@@ -62,17 +53,11 @@ void MainWindow::buildStatusBar(){
 }
 
 void MainWindow::buildDockWidgets(){
-  workspace = new Workspace(tr("Workspace"), this);
-  workspace->setAllowedAreas(Qt::LeftDockWidgetArea |
-                            Qt::RightDockWidgetArea);
-  workspace->setMinimumWidth(120);
-  addDockWidget(Qt::LeftDockWidgetArea, workspace);
+
 }
 
 void MainWindow::addNewFile(){
-  QString file = QFileDialog::getSaveFileName(nullptr, tr("Create file"),
-    QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  fileManager->newFile(file.toStdString(), editorManager);
+
 }
 
 void MainWindow::openExistingFile(){
@@ -81,22 +66,4 @@ void MainWindow::openExistingFile(){
   if(file != nullptr)
     fileManager->openFile(file.toStdString(), editorManager);
   // Input box for asking if user wants to add file to project
-}
-
-void MainWindow::createNewProject(){
-  QString name;
-
-  Assistant *projectCreation = new Assistant(fileManager);
-  projectCreation->setWindowModality(Qt::ApplicationModal);
-  projectCreation->show();
-
-}
-
-void MainWindow::openExistingFolderProject(){
-
-}
-
-void MainWindow::edit(QModelIndex modelIndex){
-  QString name = workspace->getModel()->filePath(modelIndex);
-  editorManager->
 }

@@ -19,11 +19,11 @@ void EditorManager::closeTab(){
 
 void EditorManager::newTab(QString title, QString content){
     Editor *editor = new Editor();
-    //editor->setTabStopWidth(tabSize);
     editor->setFont(defaultFont);
+    editor->setTabStopWidth(30);
     QString language = getExtension(title);
     editor->document()->setPlainText(content);
-    if(language == "c" || language == "h" || language == "hpp")
+    if(language == "c" || language == "h" || language == "hpp" || language == "c++")
         language = "cpp";
     Highlighter *h;
     if(!highlighterExistsFor(language)){

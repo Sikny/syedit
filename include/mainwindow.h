@@ -14,7 +14,6 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
-#include <QModelIndex>
 
 #include <iostream>
 
@@ -34,16 +33,11 @@ public slots:
   void quitApp();
   void addNewFile();
   void openExistingFile();
-  void openExistingFolderProject();
-  void createNewProject();
-  void edit(QModelIndex);
 private:
   EditorManager* editorManager;
   FileManager *fileManager;
-  Workspace *workspace;
-  QMenu *fileMenu, *newSMenu, *openSMenu, *editMenu, *runMenu, *helpMenu;
-  QAction *quit, *newFile, *newProject, *openFile, *openProject, *saveProject,
-    *preferences, *closeTab;
+  QMenu *fileMenu, *editMenu, *runMenu, *helpMenu;
+  QAction *quit, *newFile, *openFile, *preferences, *closeTab;
 };
 
 #endif  // MAINWIN_H
