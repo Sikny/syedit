@@ -16,16 +16,30 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
 
   setCentralWidget(editor);
   setMenuBar(menuBar);
+
+	connect(newAction, SIGNAL(triggered()), this, SLOT(handleNew()));
+	connect(saveAction, SIGNAL(triggered()), this, SLOT(handleSave()));
+	connect(openAction, SIGNAL(triggered()), this, SLOT(handleOpen()));
 }
 
 void MainWindow::handleNew(){
-  QString fileName = QFileDialog::getSaveFileName();
+  QString fileName = QFileDialog::getSaveFileName(this, tr("New File"),
+		QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
+	if(!fileName.isEmpty()){
+		std::cout << fileName.toStdString() << std::endl;
+		editor->setFileName(fileName);
+	}
 }
 
 void MainWindow::handleOpen(){
-
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
+		QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
+	if(!fileName.isEmpty()){
+		editor->setFileName(fileName);
+		editor->openFile();
+	}
 }
 
 void MainWindow::handleSave(){
-
+	editor->saveFile();
 }
