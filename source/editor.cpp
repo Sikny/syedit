@@ -12,13 +12,17 @@ void Editor::saveFile(){
 
 void Editor::openFile(){
   QFile file(fileName);
+  QString extension((new QFileInfo(fileName))->suffix());
   if(file.open(QFile::ReadOnly)){
     QTextStream in(&file);
     QString line;
     QString content("");
     while(in.readLineInto(&line)){
-      content.append(line);
+      content.append(line+"\n");
     }
     this->setPlainText(content);
   }
+  if(extension == "c" || extension == "h" || extension == "hpp")
+      extension = "cpp";
+  Highlighter *h = new Highlighter(this->document(), extension);
 }

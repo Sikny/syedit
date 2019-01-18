@@ -4,6 +4,9 @@
 #include <QPlainTextEdit>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QFileInfo>
+
+#include "highlighter.h"
 
 class Editor : public QPlainTextEdit{
 public:
