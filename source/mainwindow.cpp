@@ -4,10 +4,11 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
   editor = new Editor(this);
   menuBar = new QMenuBar(this);
 
-  QMenu *menuFile = new QMenu(tr("&File"));
-  QAction *newAction = new QAction(tr("New"));
-  QAction *openAction = new QAction(tr("Open"));
-  QAction *saveAction = new QAction(tr("Save"));
+  QMenu *menuFile;
+  menuFile = new QMenu(tr("&File"));
+  QAction *newAction = new QAction(tr("New"), nullptr);
+  QAction *openAction = new QAction(tr("Open"), nullptr);
+  QAction *saveAction = new QAction(tr("Save"), nullptr);
   menuFile->addAction(newAction);
   menuFile->addAction(openAction);
   menuFile->addAction(saveAction);
