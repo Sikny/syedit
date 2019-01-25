@@ -25,7 +25,7 @@ void Highlighter::highlightBlock(const QString &text){
     highlightLine(text, "\\b[+-]?[0-9]*[.]?[0-9]+\\b", QColor(240, 0, 240));
     highlightLine(text, "\\b0x[0-9A-Fa-f]+\\b", QColor(240, 0, 240));
     highlightLine(text, primKeyRegex, QColor(0, 0, 160));
-    highlightLine(text, "[+=;\\*[\\]{}()/<>,-]*", QColor(255, 0, 0));
+    highlightLine(text, "[+=;\\*[\\]{}()/<>:,-]*", QColor(255, 0, 0));
     highlightLine(text, "#.*$", QColor(0, 160, 0));
     highlightLine(text, "\".*\"", QColor(0, 0, 255));
     //highlightLine(text, "\"([^\"]*)\"", QColor(0, 0, 255));

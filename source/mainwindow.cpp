@@ -29,6 +29,7 @@ void MainWindow::handleNew(){
 	if(!fileName.isEmpty()){
 		std::cout << fileName.toStdString() << std::endl;
 		editor->setFileName(fileName);
+        setHighlighter(fileName);
 	}
 }
 
@@ -38,9 +39,17 @@ void MainWindow::handleOpen(){
 	if(!fileName.isEmpty()){
 		editor->setFileName(fileName);
 		editor->openFile();
+        setHighlighter(fileName);
 	}
 }
 
 void MainWindow::handleSave(){
 	editor->saveFile();
+}
+
+void MainWindow::setHighlighter(QString& fileName){
+    QString extension((new QFileInfo(fileName))->suffix());
+    if(extension == "c" || extension == "h" || extension == "hpp")
+        extension = "cpp";
+    highlighter = new Highlighter(editor->document(), extension);
 }

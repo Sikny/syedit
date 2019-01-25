@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow{
 Q_OBJECT
 public:
   MainWindow(QWidget* parent = nullptr);
+  void setHighlighter(QString& fileName);
 public slots:
   void handleNew();
   void handleOpen();
@@ -21,6 +22,7 @@ public slots:
 private:
   Editor* editor;
   QMenuBar* menuBar;
+  Highlighter *highlighter;
 };
 
 #endif
