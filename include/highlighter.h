@@ -7,6 +7,8 @@
 #include <QSyntaxHighlighter>
 #include <QRegularExpression>
 
+#include "theme.h"
+
 class Highlighter : public QSyntaxHighlighter{
 public:
     Highlighter(QTextDocument* parent, QString& language);

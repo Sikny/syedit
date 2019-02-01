@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "editor.h"
+#include "theme.h"
 
 class MainWindow : public QMainWindow{
 Q_OBJECT

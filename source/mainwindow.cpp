@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
+  Theme::Instance().readXmlTheme();
+
   editor = new Editor(this);
   menuBar = new QMenuBar(this);
 
@@ -18,9 +20,9 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
   setCentralWidget(editor);
   setMenuBar(menuBar);
 
-	connect(newAction, SIGNAL(triggered()), this, SLOT(handleNew()));
-	connect(saveAction, SIGNAL(triggered()), this, SLOT(handleSave()));
-	connect(openAction, SIGNAL(triggered()), this, SLOT(handleOpen()));
+  connect(newAction, SIGNAL(triggered()), this, SLOT(handleNew()));
+  connect(saveAction, SIGNAL(triggered()), this, SLOT(handleSave()));
+  connect(openAction, SIGNAL(triggered()), this, SLOT(handleOpen()));
 }
 
 void MainWindow::handleNew(){

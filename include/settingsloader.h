@@ -3,18 +3,13 @@
 
 #include <QFont>
 
-#include "theme.h"
-
 class SettingsLoader
 {
 public:
     SettingsLoader();
     void readSettingsFile();
-    void loadTheme();
-    const Theme& getTheme();
 
 private:
-    //Theme& theme;
     QFont* font;
 
 };
