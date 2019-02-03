@@ -45,4 +45,14 @@
     <green>70</green>
     <blue>70</blue>
   </color>
+  <color type="tabborder">
+    <red>70</red>
+    <green>70</green>
+    <blue>70</blue>
+  </color>
+  <color type="notselected">
+    <red>70</red>
+    <green>70</green>
+    <blue>70</blue>
+  </color>
 </theme>

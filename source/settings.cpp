@@ -11,8 +11,9 @@ void Settings::readXmlTheme(){
     QFile *themeFile = new QFile("resources/themes/"+themeName+".xml");
     if(themeFile->open(QIODevice::ReadOnly))
         xml.setDevice(themeFile);
-    if(xml.hasError()){
-        std::cout << "Error loading theme" << std::endl;
+    else {
+        qDebug(qPrintable("Error loading theme '" + themeFile->fileName() + "'"));
+        return;
     }
     while(!xml.atEnd()){
         xml.readNextStartElement();
@@ -33,7 +34,7 @@ void Settings::readXmlTheme(){
             xml.skipCurrentElement();
         }
     }
-    std::cout << "Theme '" + themeName.toStdString() + " 'loaded" << std::endl;
+    std::cout << "Theme '" + themeName.toStdString() + "' loaded" << std::endl;
     std::cout << toString().toStdString() << std::endl;
 }
 

@@ -16,6 +16,9 @@ public:
   QString getFileName(){
     return fileName;
   }
+  QString getFileNameWithoutPath(){
+    return QFileInfo(fileName).fileName();
+  }
   void setFileName(QString name){
     fileName = name;
   }
@@ -28,9 +31,11 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
+public slots:
+    void highlightCurrentLine();
+
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
-    void highlightCurrentLine();
     void updateLineNumberArea(const QRect &, int);
 
 private:

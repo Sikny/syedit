@@ -22,17 +22,10 @@ public slots:
   void handleNew();
   void handleOpen();
   void handleSave();
-  void loadTheme(){
-      setStyleSheet("MainWindow, MainWindow * {background-color: "
-                    + Settings::Instance().color("background").name() + ";"
-                    + "color: "
-                    + Settings::Instance().color("text").name() + ";}");
-      for(int i = 0; i < editors->count(); i++){
-        editors->widget(i)->setFont(Settings::Instance().getFont());
-        highlighters.at(i)->rehighlight();
-      }
-  }
+  void loadTheme();
   void closeTab(int);
+  void textEdited(bool);
+
 private:
   QTabWidget* editors;
   QMenuBar* menuBar;

@@ -2,7 +2,6 @@
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
   Settings::Instance().setTheme("default");
-  Settings::Instance().readXmlTheme();
 
   editors = new QTabWidget(this);
   editors->setTabsClosable(true);
@@ -40,6 +39,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
   connect(openAction, SIGNAL(triggered()), this, SLOT(handleOpen()));
 
   connect(settingsAction, SIGNAL(triggered()), settings, SLOT(show()));
+  loadTheme();
 }
 
 void MainWindow::handleNew(){
@@ -51,7 +51,8 @@ void MainWindow::handleNew(){
         e->setFileName(fileName);
         editors->addTab(e, QFileInfo(fileName).fileName());
         setHighlighter(e, fileName);
-        loadTheme();
+        editors->setCurrentWidget(e);
+        connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
 	}
 }
 
@@ -64,12 +65,16 @@ void MainWindow::handleOpen(){
         e->openFile();
         editors->addTab(e, QFileInfo(fileName).fileName());
         setHighlighter(e, fileName);
-        loadTheme();
+        editors->setCurrentWidget(e);
+        connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
 	}
 }
 
 void MainWindow::handleSave(){
     static_cast<Editor*>(editors->currentWidget())->saveFile();
+    editors->setTabText(editors->currentIndex(),
+        static_cast<Editor*>(editors->currentWidget())->getFileNameWithoutPath());
+    static_cast<Editor*>(editors->currentWidget())->document()->setModified(false);
 }
 
 void MainWindow::setHighlighter(Editor* editor, QString& fileName){
@@ -84,4 +89,41 @@ void MainWindow::closeTab(int index){
     highlighters.removeAt(index);
     editors->removeTab(index);
     delete e;
+}
+
+void MainWindow::loadTheme(){
+    QString bgColor = Settings::Instance().color("background").name();
+    QString textColor = Settings::Instance().color("text").name();
+    QString tabBordCol = Settings::Instance().color("tabborder").name();
+    QString notSelTab = Settings::Instance().color("notselected").name();
+    setStyleSheet(
+"MainWindow, MainWindow *, QTabWidget::pane, QTabBar::tab {"
+    "background-color: " + bgColor + ";"
+    "color: " + textColor + ";}"
+"Editor{border: none;}"
+"QTabWidget::pane {"
+    "border-top: 1px solid" + tabBordCol + ";"
+"}"
+"QTabBar::tab{"
+    "border-top: 1px solid " + tabBordCol + ";"
+    "border-left: 1px solid " + tabBordCol + ";"
+    "border-right: 1px solid " + tabBordCol + ";"
+    "padding: 2px 5px 2px 5px;"
+"}"
+"QTabBar::tab:!selected{"
+    "background-color: " + notSelTab + ";"
+    "border-color: " + bgColor + ";"
+    "color: " + bgColor + ";"
+"}");
+    for(int i = 0; i < editors->count(); i++){
+      editors->widget(i)->setFont(Settings::Instance().getFont());
+      static_cast<Editor*>(editors->widget(i))->highlightCurrentLine();
+      highlighters.at(i)->rehighlight();
+    }
+}
+
+void MainWindow::textEdited(bool changed){
+    if(changed)
+        editors->setTabText(editors->currentIndex(),
+            static_cast<Editor*>(editors->currentWidget())->getFileNameWithoutPath() + " ●");
 }

@@ -8,15 +8,15 @@ OBJECTS_DIR = obj
 
 MOC_DIR = moc
 
-SOURCES += source/main.cpp\
-	source/mainwindow.cpp\
-	source/editor.cpp\
-        source/highlighter.cpp \
-        source/settingswindow.cpp \
-    source/settings.cpp
+SOURCES += source/main.cpp \
+    source/mainwindow.cpp \
+    source/editor.cpp \
+    source/highlighter.cpp \
+    source/settingswindow.cpp \
+    source/settings.cpp \
 
-HEADERS += include/mainwindow.h\
-	include/editor.h\
-        include/highlighter.h \
-        include/settingswindow.h \
-    include/settings.h
+HEADERS += include/mainwindow.h \
+    include/editor.h \
+    include/highlighter.h \
+    include/settingswindow.h \
+    include/settings.h \

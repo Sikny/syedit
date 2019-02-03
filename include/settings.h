@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QXmlStreamReader>
 #include <QFile>
+#include <QFileInfo>
 #include <iostream>
 
 class Settings
