@@ -9,21 +9,35 @@
 #include <iostream>
 
 #include "editor.h"
-#include "theme.h"
+#include "settings.h"
+#include "settingswindow.h"
 
 class MainWindow : public QMainWindow{
 Q_OBJECT
 public:
   MainWindow(QWidget* parent = nullptr);
-  void setHighlighter(QString& fileName);
+  void setHighlighter(Editor* editor, QString& fileName);
+
 public slots:
   void handleNew();
   void handleOpen();
   void handleSave();
+  void loadTheme(){
+      setStyleSheet("MainWindow, MainWindow * {background-color: "
+                    + Settings::Instance().color("background").name() + ";"
+                    + "color: "
+                    + Settings::Instance().color("text").name() + ";}");
+      for(int i = 0; i < editors->count(); i++){
+        editors->widget(i)->setFont(Settings::Instance().getFont());
+        highlighters.at(i)->rehighlight();
+      }
+  }
+  void closeTab(int);
 private:
-  Editor* editor;
+  QTabWidget* editors;
   QMenuBar* menuBar;
-  Highlighter *highlighter;
+  QList<Highlighter*> highlighters;
+  SettingsWindow *settings;
 };
 
 #endif

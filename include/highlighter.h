@@ -7,7 +7,7 @@
 #include <QSyntaxHighlighter>
 #include <QRegularExpression>
 
-#include "theme.h"
+#include "settings.h"
 
 class Highlighter : public QSyntaxHighlighter{
 public:
@@ -17,6 +17,9 @@ public:
             const QBrush &color);
     void highlightMultiLine(const QString &text, const QString &start,
             const QString &end, const QBrush &color);
+    QString getLanguage(){
+        return language;
+    }
 
 private:
     QString language;

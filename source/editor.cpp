@@ -8,6 +8,7 @@ Editor::Editor(QWidget * parent) : QPlainTextEdit(parent){
 
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
+    this->setTabStopWidth(10);
 }
 
 void Editor::saveFile(){
@@ -76,7 +77,7 @@ void Editor::highlightCurrentLine()
     if (!isReadOnly()) {
         QTextEdit::ExtraSelection selection;
 
-        QColor lineColor = Theme::Instance().color("currentline").lighter(120);
+        QColor lineColor = Settings::Instance().color("currentline").lighter(120);
 
         selection.format.setBackground(lineColor);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);
@@ -91,7 +92,7 @@ void Editor::highlightCurrentLine()
 void Editor::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
     QPainter painter(lineNumberArea);
-    painter.fillRect(event->rect(), Theme::Instance().color("currentline"));
+    painter.fillRect(event->rect(), Settings::Instance().color("currentline"));
     QTextBlock block = firstVisibleBlock();
     int blockNumber = block.blockNumber();
     int top = static_cast<int>(blockBoundingGeometry(block).translated(contentOffset()).top());
@@ -99,7 +100,7 @@ void Editor::lineNumberAreaPaintEvent(QPaintEvent *event)
     while (block.isValid() && top <= event->rect().bottom()) {
             if (block.isVisible() && bottom >= event->rect().top()) {
                 QString number = QString::number(blockNumber + 1) + " ";
-                painter.setPen(Theme::Instance().color("text"));
+                painter.setPen(Settings::Instance().color("text"));
                 painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
                                  Qt::AlignRight, number);
             }

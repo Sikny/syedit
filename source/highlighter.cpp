@@ -23,17 +23,17 @@ Highlighter::Highlighter(QTextDocument* parent,
 
 void Highlighter::highlightBlock(const QString &text){
     highlightLine(text, "\\b[+-]?[0-9]*[.]?[0-9]+\\b",
-                  Theme::Instance().color("number"));
+                  Settings::Instance().color("number"));
     highlightLine(text, "\\b0x[0-9A-Fa-f]+\\b",
-                  Theme::Instance().color("number"));
-    highlightLine(text, primKeyRegex, Theme::Instance().color("primary"));
+                  Settings::Instance().color("number"));
+    highlightLine(text, primKeyRegex, Settings::Instance().color("primary"));
     highlightLine(text, "[+=;\\*[\\]{}()/<>:,-]*",
-                  Theme::Instance().color("operator"));
-    highlightLine(text, "#.*$", Theme::Instance().color("secondary"));
-    highlightLine(text, "\".*\"", Theme::Instance().color("string"));
-    highlightLine(text, "//[^\n]*", Theme::Instance().color("comment"));
+                  Settings::Instance().color("operator"));
+    highlightLine(text, "#.*$", Settings::Instance().color("secondary"));
+    highlightLine(text, "\".*\"", Settings::Instance().color("string"));
+    highlightLine(text, "//[^\n]*", Settings::Instance().color("comment"));
     // multiline, different delimiters
-    highlightMultiLine(text, "/\\*", "\\*/", Theme::Instance().color("comment"));
+    highlightMultiLine(text, "/\\*", "\\*/", Settings::Instance().color("comment"));
 }
 
 void Highlighter::highlightMultiLine(const QString &text, const QString &start,
@@ -65,7 +65,6 @@ void Highlighter::highlightMultiLine(const QString &text, const QString &start,
                                      startIndex + commentLength);
     }
 }
-
 
 void Highlighter::highlightLine(const QString &text, const QString &expression,
         const QBrush &color){

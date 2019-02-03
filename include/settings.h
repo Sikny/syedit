@@ -8,10 +8,10 @@
 #include <QFile>
 #include <iostream>
 
-class Theme
+class Settings
 {
 public:
-    static Theme& Instance(){
+    static Settings& Instance(){
         return instance;
     }
 
@@ -20,10 +20,17 @@ public:
     QColor color(QString key){
         return colors.value(key);
     }
+    void setTheme(QString newTheme){
+        themeName = newTheme;
+        readXmlTheme();
+    }
+    QFont getFont(){
+        return this->font;
+    }
 
 private:
-    static Theme instance;
-    Theme();
+    static Settings instance;
+    Settings();
 
     QString themeName;
     QMap<QString, QColor> colors;

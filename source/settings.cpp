@@ -1,14 +1,14 @@
-#include "theme.h"
+#include "settings.h"
 
-Theme Theme::instance = Theme();
+Settings Settings::instance = Settings();
 
-Theme::Theme() {
+Settings::Settings() {
     themeName = "default";
 }
 
-void Theme::readXmlTheme(){
+void Settings::readXmlTheme(){
     QXmlStreamReader xml;
-    QFile *themeFile = new QFile("resources/themes/default.xml");
+    QFile *themeFile = new QFile("resources/themes/"+themeName+".xml");
     if(themeFile->open(QIODevice::ReadOnly))
         xml.setDevice(themeFile);
     if(xml.hasError()){
@@ -16,12 +16,7 @@ void Theme::readXmlTheme(){
     }
     while(!xml.atEnd()){
         xml.readNextStartElement();
-        if(xml.name() == "font"){
-            for(QXmlStreamAttribute att : xml.attributes()){
-                if(att.name() == "family")
-                    font.setFamily(att.value().toString());
-            }
-        } else if(xml.name() == "color" && !xml.isEndElement()){
+        if(xml.name() == "color" && !xml.isEndElement()){
             QString key = xml.attributes().value("type").toString();
 
             xml.readNextStartElement();
@@ -42,9 +37,8 @@ void Theme::readXmlTheme(){
     std::cout << toString().toStdString() << std::endl;
 }
 
-QString Theme::toString(){
+QString Settings::toString(){
     QString str = "";
-    str += "Font : " + font.family() + "\n";
     str += "Colors : \n";
     for(QString key : colors.keys()){
         str += key + " : " + colors.value(key).name() + "\n";

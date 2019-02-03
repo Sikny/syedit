@@ -12,11 +12,11 @@ SOURCES += source/main.cpp\
 	source/mainwindow.cpp\
 	source/editor.cpp\
         source/highlighter.cpp \
-        source/settingsloader.cpp \
-        source/theme.cpp
+        source/settingswindow.cpp \
+    source/settings.cpp
 
 HEADERS += include/mainwindow.h\
 	include/editor.h\
         include/highlighter.h \
-        include/settingsloader.h \
-        include/theme.h
+        include/settingswindow.h \
+    include/settings.h
