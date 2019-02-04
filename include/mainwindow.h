@@ -32,6 +32,8 @@ private:
   QList<Highlighter*> highlighters;
   SettingsWindow *settingsWin;
 
+  QAction* saveAction;
+
   Settings& settingsInstance;
 };
 

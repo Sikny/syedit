@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent), settingsInstance
   newAction->setShortcut(QKeySequence("Ctrl+N"));
   QAction *openAction = new QAction(tr("Open..."), nullptr);
   openAction->setShortcut(QKeySequence("Ctrl+O"));
-  QAction *saveAction = new QAction(tr("Save"), nullptr);
+  saveAction = new QAction(tr("Save"), nullptr);
   saveAction->setShortcut(QKeySequence("Ctrl+S"));
   menuFile->addAction(newAction);
   menuFile->addAction(openAction);
@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent), settingsInstance
 
   connect(settingsAction, SIGNAL(triggered()), settingsWin, SLOT(show()));
   loadTheme();
+  saveAction->setDisabled(true);
 }
 
 void MainWindow::handleNew(){
@@ -51,6 +52,7 @@ void MainWindow::handleNew(){
         setHighlighter(e, fileName);
         editors->setCurrentWidget(e);
         connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
+        saveAction->setEnabled(true);
 	}
 }
 
@@ -65,6 +67,7 @@ void MainWindow::handleOpen(){
         setHighlighter(e, fileName);
         editors->setCurrentWidget(e);
         connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
+        saveAction->setEnabled(true);
 	}
 }
 
@@ -87,8 +90,10 @@ void MainWindow::closeTab(int index){
     Highlighter* h = highlighters.at(index);
     highlighters.removeAt(index);
     editors->removeTab(index);
-    delete e;
+    if(editors->count() < 1)
+        saveAction->setDisabled(true);
     delete h;
+    delete e;
 }
 
 void MainWindow::loadTheme(){
