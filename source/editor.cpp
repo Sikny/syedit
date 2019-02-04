@@ -9,6 +9,7 @@ Editor::Editor(QWidget * parent) : QPlainTextEdit(parent){
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
     this->setTabStopWidth(10);
+    setFont(Settings::Instance().getFont());
 }
 
 void Editor::saveFile(){

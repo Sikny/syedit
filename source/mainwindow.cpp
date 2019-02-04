@@ -1,15 +1,13 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
-  Settings::Instance().setTheme("default");
-
+MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent), settingsInstance(Settings::Instance()){
   editors = new QTabWidget(this);
   editors->setTabsClosable(true);
   connect(editors, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 
   menuBar = new QMenuBar(this);
-  settings = new SettingsWindow(this);
-  connect(settings, SIGNAL(settingsModified()), this, SLOT(loadTheme()));
+  settingsWin = new SettingsWindow(this);
+  connect(settingsWin, SIGNAL(settingsModified()), this, SLOT(loadTheme()));
 
   QMenu *menuFile;
   menuFile = new QMenu(tr("&File"));
@@ -38,7 +36,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent){
   connect(saveAction, SIGNAL(triggered()), this, SLOT(handleSave()));
   connect(openAction, SIGNAL(triggered()), this, SLOT(handleOpen()));
 
-  connect(settingsAction, SIGNAL(triggered()), settings, SLOT(show()));
+  connect(settingsAction, SIGNAL(triggered()), settingsWin, SLOT(show()));
   loadTheme();
 }
 
@@ -86,9 +84,11 @@ void MainWindow::setHighlighter(Editor* editor, QString& fileName){
 
 void MainWindow::closeTab(int index){
     Editor* e = static_cast<Editor*>(editors->widget(index));
+    Highlighter* h = highlighters.at(index);
     highlighters.removeAt(index);
     editors->removeTab(index);
     delete e;
+    delete h;
 }
 
 void MainWindow::loadTheme(){
@@ -116,9 +116,10 @@ void MainWindow::loadTheme(){
     "color: " + bgColor + ";"
 "}");
     for(int i = 0; i < editors->count(); i++){
-      editors->widget(i)->setFont(Settings::Instance().getFont());
-      static_cast<Editor*>(editors->widget(i))->highlightCurrentLine();
-      highlighters.at(i)->rehighlight();
+        Editor* e = static_cast<Editor*>(editors->widget(i));
+        e->setFont(Settings::Instance().getFont());
+        e->highlightCurrentLine();
+        highlighters.at(i)->rehighlight();
     }
 }
 

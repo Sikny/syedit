@@ -6,7 +6,10 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
     this->setWindowModality(Qt::ApplicationModal);
     this->setWindowTitle(tr("Settings"));
 
+    // building layouts
     QHBoxLayout* layout = new QHBoxLayout();
+    QVBoxLayout* rightLayout = new QVBoxLayout();
+
     QListWidget* navList = new QListWidget();
     navList->addItem(new QListWidgetItem(tr("Editor")));
     navList->addItem(new QListWidgetItem(tr("Theme")));
@@ -20,30 +23,12 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
     tabs->addTab(editorTab, tr("Editor"));
     tabs->addTab(themeTab, tr("Theme"));
 
-    layout->addWidget(tabs, 5);
+    rightLayout->addWidget(tabs);
     this->setLayout(layout);
     this->setFixedSize(sizeHint());
 
     buildTabsWidgets();
 
-    connect(navList, SIGNAL(itemClicked(QListWidgetItem*)),
-            this, SLOT(handleNavigation(QListWidgetItem*)));
-}
-
-void SettingsWindow::buildTabsWidgets(){
-    QVBoxLayout* layoutEditor = new QVBoxLayout();
-
-    tabs->widget(0)->setLayout(layoutEditor);
-    QVBoxLayout* layoutTheme = new QVBoxLayout();
-    themeChoice = new QComboBox();
-    // reading for theme files
-    QDirIterator dirIter("resources/themes");
-    while(dirIter.hasNext()){
-        QString nextPath = dirIter.next();
-        if(nextPath != "resources/themes/." && nextPath != "resources/themes/..")
-            themeChoice->addItem(QFileInfo(nextPath).baseName());
-    }
-    layoutTheme->addWidget(themeChoice);
     QHBoxLayout* confirmButtons = new QHBoxLayout();
     QPushButton* applyB = new QPushButton(tr("Apply"));
     connect(applyB, SIGNAL(clicked()), this, SLOT(applySettings()));
@@ -51,12 +36,61 @@ void SettingsWindow::buildTabsWidgets(){
     connect(cancelB, SIGNAL(clicked()), this, SLOT(close()));
     confirmButtons->addWidget(applyB);
     confirmButtons->addWidget(cancelB);
-    layoutTheme->addLayout(confirmButtons);
+
+    rightLayout->addLayout(confirmButtons, 5);
+    layout->addLayout(rightLayout);
+
+    connect(navList, SIGNAL(itemClicked(QListWidgetItem*)),
+            this, SLOT(handleNavigation(QListWidgetItem*)));
+}
+
+/**
+ * @brief SettingsWindow::buildTabsWidgets
+ * builds different tab widgets, each with a different layout
+ */
+void SettingsWindow::buildTabsWidgets(){
+    QVBoxLayout* layoutEditor = new QVBoxLayout();
+        QGroupBox* fontGroup = new QGroupBox(tr("Font"));
+            QHBoxLayout* layoutFont = new QHBoxLayout();
+                fontFamily = new QComboBox();
+                fontFamily->setEditable(true);
+                fontFamily->setInsertPolicy(QComboBox::NoInsert);
+                QFontDatabase fontData;
+                fontFamily->addItems(fontData.families());
+                fontFamily->setCurrentText(Settings::Instance().getFont().family());
+                layoutFont->addWidget(fontFamily);
+
+                fontSize = new QSpinBox();
+                fontSize->setValue(Settings::Instance().getFont().pointSize());
+                layoutFont->addWidget(fontSize);
+            fontGroup->setLayout(layoutFont);
+        layoutEditor->addWidget(fontGroup);
+    tabs->widget(0)->setLayout(layoutEditor);
+
+    QVBoxLayout* layoutTheme = new QVBoxLayout();
+        QGroupBox* themeGroup = new QGroupBox(tr("Theme"));
+            QVBoxLayout* tGrpLayout = new QVBoxLayout();
+                themeChoice = new QComboBox();
+                // reading for theme files
+                QDirIterator dirIter("resources/themes");
+                while(dirIter.hasNext()){
+                    QString nextPath = dirIter.next();
+                    if(nextPath != "resources/themes/." && nextPath != "resources/themes/..")
+                        themeChoice->addItem(QFileInfo(nextPath).baseName());
+                }
+                themeChoice->setCurrentText(Settings::Instance().getTheme());
+                tGrpLayout->addWidget(themeChoice);
+            themeGroup->setLayout(tGrpLayout);
+        layoutTheme->addWidget(themeGroup);
     tabs->widget(1)->setLayout(layoutTheme);
 }
 
 void SettingsWindow::applySettings(){
     Settings::Instance().setTheme(themeChoice->currentText());
+    QFont newFont(fontFamily->currentText());
+    newFont.setPointSize(fontSize->value());
+    Settings::Instance().setFont(newFont);
+    Settings::Instance().saveSettings();
     emit settingsModified();
 }
 

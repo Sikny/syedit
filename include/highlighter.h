@@ -24,6 +24,7 @@ public:
 private:
     QString language;
     QString primKeyRegex;
+    bool doHighlight;
 };
 
 #endif // HIGHLIGHTER_H

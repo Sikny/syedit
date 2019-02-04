@@ -7,6 +7,8 @@
 #include <QXmlStreamReader>
 #include <QFile>
 #include <QFileInfo>
+#include <QSettings>
+
 #include <iostream>
 
 class Settings
@@ -25,9 +27,16 @@ public:
         themeName = newTheme;
         readXmlTheme();
     }
+    QString getTheme(){
+        return themeName;
+    }
+    void setFont(QFont font){
+        this->font = font;
+    }
     QFont getFont(){
         return this->font;
     }
+    void saveSettings();
 
 private:
     static Settings instance;

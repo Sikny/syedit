@@ -30,7 +30,9 @@ private:
   QTabWidget* editors;
   QMenuBar* menuBar;
   QList<Highlighter*> highlighters;
-  SettingsWindow *settings;
+  SettingsWindow *settingsWin;
+
+  Settings& settingsInstance;
 };
 
 #endif

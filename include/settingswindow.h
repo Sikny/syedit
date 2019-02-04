@@ -10,6 +10,9 @@
 #include <QListWidget>
 #include <QDirIterator>
 #include <QMainWindow>
+#include <QGroupBox>
+#include <QFontDatabase>
+#include <QSpinBox>
 
 #include "settings.h"
 
@@ -30,7 +33,8 @@ public slots:
 private:
     QTabWidget* tabs;
 
-    QComboBox* themeChoice;
+    QComboBox *themeChoice, *fontFamily;
+    QSpinBox *fontSize;
 
     QMainWindow* mainWindow;
 };

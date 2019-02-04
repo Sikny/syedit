@@ -3,7 +3,18 @@
 Settings Settings::instance = Settings();
 
 Settings::Settings() {
-    themeName = "default";
+    //initializing settings
+    QSettings settings("resources/config.ini", QSettings::IniFormat);
+    settings.beginGroup("Font");
+    font.setFamily(settings.value("family").toString());
+    font.setPointSize(settings.value("size").toInt());
+    settings.endGroup();
+
+    settings.beginGroup("Theme");
+    themeName = settings.value("name").toString();
+    settings.endGroup();
+
+    readXmlTheme();
 }
 
 void Settings::readXmlTheme(){
@@ -35,7 +46,6 @@ void Settings::readXmlTheme(){
         }
     }
     std::cout << "Theme '" + themeName.toStdString() + "' loaded" << std::endl;
-    std::cout << toString().toStdString() << std::endl;
 }
 
 QString Settings::toString(){
@@ -45,4 +55,16 @@ QString Settings::toString(){
         str += key + " : " + colors.value(key).name() + "\n";
     }
     return str;
+}
+
+void Settings::saveSettings(){
+    QSettings settings("resources/config.ini", QSettings::IniFormat);
+    settings.beginGroup("Font");
+    settings.setValue("family", font.family());
+    settings.setValue("size", font.pointSize());
+    settings.endGroup();
+
+    settings.beginGroup("Theme");
+    settings.setValue("name", themeName);
+    settings.endGroup();
 }

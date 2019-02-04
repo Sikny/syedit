@@ -15,25 +15,29 @@ Highlighter::Highlighter(QTextDocument* parent,
             primKeyRegex += "|";
             i++;
         }
+        doHighlight = true;
     } else {
         std::cout << "File " << file << " not found" << std::endl;
+        doHighlight = false;
     }
     is.close();
 }
 
 void Highlighter::highlightBlock(const QString &text){
-    highlightLine(text, "\\b[+-]?[0-9]*[.]?[0-9]+\\b",
+    if(doHighlight){
+        highlightLine(text, "\\b[+-]?[0-9]*[.]?[0-9]+\\b",
                   Settings::Instance().color("number"));
-    highlightLine(text, "\\b0x[0-9A-Fa-f]+\\b",
+        highlightLine(text, "\\b0x[0-9A-Fa-f]+\\b",
                   Settings::Instance().color("number"));
-    highlightLine(text, primKeyRegex, Settings::Instance().color("primary"));
-    highlightLine(text, "[+=;\\*[\\]{}()/<>:,-]*",
+        highlightLine(text, primKeyRegex, Settings::Instance().color("primary"));
+        highlightLine(text, "[+=;\\*[\\]{}()/<>:,-]*",
                   Settings::Instance().color("operator"));
-    highlightLine(text, "#.*$", Settings::Instance().color("secondary"));
-    highlightLine(text, "\".*\"", Settings::Instance().color("string"));
-    highlightLine(text, "//[^\n]*", Settings::Instance().color("comment"));
-    // multiline, different delimiters
-    highlightMultiLine(text, "/\\*", "\\*/", Settings::Instance().color("comment"));
+        highlightLine(text, "#.*$", Settings::Instance().color("secondary"));
+        highlightLine(text, "\".*\"", Settings::Instance().color("string"));
+        highlightLine(text, "//[^\n]*", Settings::Instance().color("comment"));
+        // multiline, different delimiters
+        highlightMultiLine(text, "/\\*", "\\*/", Settings::Instance().color("comment"));
+    }
 }
 
 void Highlighter::highlightMultiLine(const QString &text, const QString &start,
