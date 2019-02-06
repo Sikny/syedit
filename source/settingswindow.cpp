@@ -1,4 +1,4 @@
-#include "include/settingswindow.h"
+#include "settingswindow.h"
 
 SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
 {

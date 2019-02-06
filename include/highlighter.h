@@ -6,6 +6,7 @@
 
 #include <QSyntaxHighlighter>
 #include <QRegularExpression>
+#include <QApplication>
 
 #include "settings.h"
 

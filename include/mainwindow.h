@@ -5,6 +5,7 @@
 #include <QMenuBar>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QFileInfo>
 
 #include <iostream>
 
@@ -15,7 +16,7 @@
 class MainWindow : public QMainWindow{
 Q_OBJECT
 public:
-  MainWindow(QWidget* parent = nullptr);
+  MainWindow(QStringList argv, QWidget* parent = nullptr);
   void setHighlighter(Editor* editor, QString& fileName);
 
 public slots:
@@ -33,8 +34,6 @@ private:
   SettingsWindow *settingsWin;
 
   QAction* saveAction;
-
-  Settings& settingsInstance;
 };
 
 #endif

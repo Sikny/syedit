@@ -17,6 +17,7 @@ public:
     static Settings& Instance(){
         return instance;
     }
+    void initialize();
 
     void readXmlTheme();
     QString toString();

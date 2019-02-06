@@ -21,6 +21,7 @@ void Editor::saveFile(){
 }
 
 void Editor::openFile(){
+  std::cout << fileName.toStdString() << std::endl;
   QFile file(fileName);
   if(file.open(QFile::ReadOnly)){
     QTextStream in(&file);

@@ -23,6 +23,7 @@ public:
     SettingsWindow(QMainWindow* mainWin);
     void buildTabsWidgets();
 
+
 signals:
     void settingsModified();
 

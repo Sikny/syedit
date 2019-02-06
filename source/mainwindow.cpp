@@ -1,6 +1,11 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent), settingsInstance(Settings::Instance()){
+MainWindow::MainWindow(QStringList argv, QWidget * parent) : QMainWindow(parent){
+
+  QDir::setCurrent(QFileInfo(argv.at(0)).path());
+
+  Settings::Instance().initialize();
+
   editors = new QTabWidget(this);
   editors->setTabsClosable(true);
   connect(editors, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
@@ -39,6 +44,20 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent), settingsInstance
   connect(settingsAction, SIGNAL(triggered()), settingsWin, SLOT(show()));
   loadTheme();
   saveAction->setDisabled(true);
+
+  // for opening a file with editor
+  if(argv.count() > 1) {
+      QFile file(argv.at(1));
+      QString fileName = file.fileName();
+      Editor* e = new Editor(editors);
+      e->setFileName(QFileInfo(file).absoluteFilePath());
+      e->openFile();
+      editors->addTab(e, QFileInfo(file).fileName());
+      setHighlighter(e, fileName);
+      editors->setCurrentWidget(e);
+      connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
+      saveAction->setEnabled(true);
+   }
 }
 
 void MainWindow::handleNew(){
@@ -57,16 +76,18 @@ void MainWindow::handleNew(){
 }
 
 void MainWindow::handleOpen(){
-	QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),
-		QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
-	if(!fileName.isEmpty()){
-        Editor* e = new Editor(editors);
-        e->setFileName(fileName);
-        e->openFile();
-        editors->addTab(e, QFileInfo(fileName).fileName());
-        setHighlighter(e, fileName);
-        editors->setCurrentWidget(e);
-        connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
+    QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open Files"),
+        QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
+    if(!fileNames.isEmpty()){
+        for(QString fileName : fileNames){
+            Editor* e = new Editor(editors);
+            e->setFileName(fileName);
+            e->openFile();
+            editors->addTab(e, QFileInfo(fileName).fileName());
+            setHighlighter(e, fileName);
+            editors->setCurrentWidget(e);
+            connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
+        }
         saveAction->setEnabled(true);
 	}
 }
@@ -106,6 +127,7 @@ void MainWindow::loadTheme(){
     "background-color: " + bgColor + ";"
     "color: " + textColor + ";}"
 "Editor{border: none;}"
+"QMenuBar::item:selected {background-color: "+tabBordCol+";}"
 "QTabWidget::pane {"
     "border-top: 1px solid" + tabBordCol + ";"
 "}"

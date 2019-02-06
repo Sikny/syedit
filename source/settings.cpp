@@ -3,7 +3,9 @@
 Settings Settings::instance = Settings();
 
 Settings::Settings() {
-    //initializing settings
+}
+
+void Settings::initialize(){
     QSettings settings("resources/config.ini", QSettings::IniFormat);
     settings.beginGroup("Font");
     font.setFamily(settings.value("family").toString());
@@ -23,7 +25,7 @@ void Settings::readXmlTheme(){
     if(themeFile->open(QIODevice::ReadOnly))
         xml.setDevice(themeFile);
     else {
-        qDebug(qPrintable("Error loading theme '" + themeFile->fileName() + "'"));
+        std::cout << "Error loading theme '" << themeFile->fileName().toStdString() + "'" << std::endl;
         return;
     }
     while(!xml.atEnd()){
