@@ -6,9 +6,9 @@
     <blue>100</blue>
   </color>
   <color type="text">
-    <red>200</red>
-    <green>200</green>
-    <blue>200</blue>
+    <red>255</red>
+    <green>255</green>
+    <blue>255</blue>
   </color>
   <color type="primary">
     <red>0</red>
@@ -16,9 +16,9 @@
     <blue>120</blue>
   </color>
   <color type="number">
-    <red>100</red>
+    <red>240</red>
     <green>0</green>
-    <blue>100</blue>
+    <blue>240</blue>
   </color>
   <color type="operator">
     <red>0</red>
