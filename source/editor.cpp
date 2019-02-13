@@ -43,7 +43,7 @@ int Editor::lineNumberAreaWidth()
         ++digits;
     }
 
-    int space = 10 + 3 + fontMetrics().width(QLatin1Char('9')) * digits;
+    int space = font().pointSize() + 3 + fontMetrics().width(QLatin1Char('9')) * digits;
 
     return space;
 }
@@ -103,6 +103,7 @@ void Editor::lineNumberAreaPaintEvent(QPaintEvent *event)
             if (block.isVisible() && bottom >= event->rect().top()) {
                 QString number = QString::number(blockNumber + 1) + " ";
                 painter.setPen(Settings::Instance().color("text"));
+                painter.setFont(this->font());
                 painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
                                  Qt::AlignRight, number);
             }
