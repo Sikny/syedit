@@ -1,5 +1,10 @@
 #include "editor.h"
 
+/**
+ * @brief Editor::Editor
+ * Builds an editor and sets to it line numbers, current line highlighting
+ * @param parent
+ */
 Editor::Editor(QWidget * parent) : QPlainTextEdit(parent){
     lineNumberArea = new LineNumberArea(this);
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
@@ -12,6 +17,11 @@ Editor::Editor(QWidget * parent) : QPlainTextEdit(parent){
     setFont(Settings::Instance().getFont());
 }
 
+/**
+ * @brief Editor::saveFile
+ * Saves the current file opened in the editor. If file with fileName name
+ * was not existing, creates it
+ */
 void Editor::saveFile(){
   QFile file(fileName);
   if(file.open(QFile::WriteOnly)){
@@ -20,6 +30,10 @@ void Editor::saveFile(){
   }
 }
 
+/**
+ * @brief Editor::openFile
+ * Opens one file in the editor @see MainWindow::handleOpen
+ */
 void Editor::openFile(){
   std::cout << fileName.toStdString() << std::endl;
   QFile file(fileName);
@@ -34,6 +48,12 @@ void Editor::openFile(){
   }
 }
 
+/**
+ * @brief Editor::lineNumberAreaWidth
+ * Calculates the appropriate width needed to write the line number
+ * character(s)
+ * @return the space needed
+ */
 int Editor::lineNumberAreaWidth()
 {
     int digits = 1;
@@ -48,11 +68,19 @@ int Editor::lineNumberAreaWidth()
     return space;
 }
 
+/**
+ * @brief Editor::updateLineNumberAreaWidth
+ */
 void Editor::updateLineNumberAreaWidth(int /* newBlockCount */)
 {
     setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 
+/**
+ * @brief Editor::updateLineNumberArea
+ * @param rect
+ * @param dy
+ */
 void Editor::updateLineNumberArea(const QRect &rect, int dy)
 {
     if (dy)
@@ -64,6 +92,10 @@ void Editor::updateLineNumberArea(const QRect &rect, int dy)
         updateLineNumberAreaWidth(0);
 }
 
+/**
+ * @brief Editor::resizeEvent
+ * @param e
+ */
 void Editor::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);
@@ -72,6 +104,9 @@ void Editor::resizeEvent(QResizeEvent *e)
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
+/**
+ * @brief Editor::highlightCurrentLine
+ */
 void Editor::highlightCurrentLine()
 {
     QList<QTextEdit::ExtraSelection> extraSelections;
@@ -91,6 +126,10 @@ void Editor::highlightCurrentLine()
     setExtraSelections(extraSelections);
 }
 
+/**
+ * @brief Editor::lineNumberAreaPaintEvent
+ * @param event
+ */
 void Editor::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
     QPainter painter(lineNumberArea);

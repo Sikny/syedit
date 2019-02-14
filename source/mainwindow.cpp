@@ -60,6 +60,11 @@ MainWindow::MainWindow(QStringList argv, QWidget * parent) : QMainWindow(parent)
    }
 }
 
+/**
+ * @brief MainWindow::handleNew
+ * Prompts new file name to user, then opens it in order to be saved
+ * later @see MainWindow::handleSave()
+ */
 void MainWindow::handleNew(){
   QString fileName = QFileDialog::getSaveFileName(this, tr("New File"),
 		QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
@@ -75,6 +80,10 @@ void MainWindow::handleNew(){
 	}
 }
 
+/**
+ * @brief MainWindow::handleOpen
+ * Prompts user for one or several files to be opened in different tabs
+ */
 void MainWindow::handleOpen(){
     QStringList fileNames = QFileDialog::getOpenFileNames(this, tr("Open Files"),
         QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
@@ -92,6 +101,10 @@ void MainWindow::handleOpen(){
 	}
 }
 
+/**
+ * @brief MainWindow::handleSave
+ * Saves the file at the current tab
+ */
 void MainWindow::handleSave(){
     static_cast<Editor*>(editors->currentWidget())->saveFile();
     editors->setTabText(editors->currentIndex(),
@@ -99,6 +112,12 @@ void MainWindow::handleSave(){
     static_cast<Editor*>(editors->currentWidget())->document()->setModified(false);
 }
 
+/**
+ * @brief MainWindow::setHighlighter
+ * Initializes the highlighter for a given editor, basing on targeted language
+ * @param editor
+ * @param fileName
+ */
 void MainWindow::setHighlighter(Editor* editor, QString& fileName){
     QString extension((new QFileInfo(fileName))->suffix());
     if(extension == "c" || extension == "h" || extension == "hpp")
@@ -106,6 +125,12 @@ void MainWindow::setHighlighter(Editor* editor, QString& fileName){
     highlighters.append(new Highlighter(editor->document(), extension));
 }
 
+/**
+ * @brief MainWindow::closeTab
+ * Closes the editor at the given index, and removes the associated highlighter.
+ * Also disables the save action if needed
+ * @param index
+ */
 void MainWindow::closeTab(int index){
     Editor* e = static_cast<Editor*>(editors->widget(index));
     Highlighter* h = highlighters.at(index);
@@ -117,6 +142,10 @@ void MainWindow::closeTab(int index){
     delete e;
 }
 
+/**
+ * @brief MainWindow::loadTheme
+ * Loads - or reloads a theme, by also rehighlighting the text
+ */
 void MainWindow::loadTheme(){
     QString bgColor = Settings::Instance().color("background").name();
     QString textColor = Settings::Instance().color("text").name();
@@ -150,6 +179,11 @@ void MainWindow::loadTheme(){
     }
 }
 
+/**
+ * @brief MainWindow::textEdited
+ * Signal for visual clue that the document is changed and unsaved
+ * @param changed
+ */
 void MainWindow::textEdited(bool changed){
     if(changed)
         editors->setTabText(editors->currentIndex(),

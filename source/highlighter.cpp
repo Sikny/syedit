@@ -23,6 +23,11 @@ Highlighter::Highlighter(QTextDocument* parent,
     is.close();
 }
 
+/**
+ * @brief Highlighter::highlightBlock
+ * Sets the highlighting rules for text block
+ * @param text
+ */
 void Highlighter::highlightBlock(const QString &text){
     if(doHighlight){
         highlightLine(text, "\\b[+-]?[0-9]*[.]?[0-9]+\\b",
@@ -40,6 +45,14 @@ void Highlighter::highlightBlock(const QString &text){
     }
 }
 
+/**
+ * @brief Highlighter::highlightMultiLine
+ * Highlights a regex that is multiline
+ * @param text
+ * @param start
+ * @param end
+ * @param color
+ */
 void Highlighter::highlightMultiLine(const QString &text, const QString &start,
         const QString &end, const QBrush &color){
     QTextCharFormat multiCommentFormat;
@@ -70,6 +83,13 @@ void Highlighter::highlightMultiLine(const QString &text, const QString &start,
     }
 }
 
+/**
+ * @brief Highlighter::highlightLine
+ * Highlights a regex that is supposed to fit inline
+ * @param text
+ * @param expression
+ * @param color
+ */
 void Highlighter::highlightLine(const QString &text, const QString &expression,
         const QBrush &color){
     QTextCharFormat myClassFormat;

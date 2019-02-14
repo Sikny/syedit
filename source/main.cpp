@@ -8,6 +8,7 @@ int main(int argc, char** argv){
   QApplication app(argc, argv);
 
   QStringList args;
+  // to open files with this app (with "open with" option)
   for(int i = 0; i < argc; i++){
       args.append(argv[i]);
       std::cout << argv[i] << std::endl;

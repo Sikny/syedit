@@ -51,7 +51,7 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
 
 /**
  * @brief SettingsWindow::buildTabsWidgets
- * builds different tab widgets, each with a different layout
+ * Builds different tab widgets, each with a different layout
  */
 void SettingsWindow::buildTabsWidgets(){
     QVBoxLayout* layoutEditor = new QVBoxLayout();
@@ -90,6 +90,11 @@ void SettingsWindow::buildTabsWidgets(){
     tabs->widget(1)->setLayout(layoutTheme);
 }
 
+/**
+ * @brief SettingsWindow::applySettings
+ * Applies the modified settings
+ * @see Settings::saveSettings, MainWindow::loadTheme
+ */
 void SettingsWindow::applySettings(){
     Settings::Instance().setTheme(themeChoice->currentText());
     QFont newFont(fontFamily->currentText());
@@ -99,6 +104,11 @@ void SettingsWindow::applySettings(){
     emit settingsModified();
 }
 
+/**
+ * @brief SettingsWindow::handleNavigation
+ * Changes tab widget when clicking on listview item
+ * @param item
+ */
 void SettingsWindow::handleNavigation(QListWidgetItem* item){
     if(item->text() == "Editor"){
         tabs->setCurrentWidget(tabs->widget(0));

@@ -5,6 +5,9 @@ Settings Settings::instance = Settings();
 Settings::Settings() {
 }
 
+/**
+ * @brief Settings::initialize
+ */
 void Settings::initialize(){
     QSettings settings("resources/config.ini", QSettings::IniFormat);
     settings.beginGroup("Font");
@@ -19,6 +22,9 @@ void Settings::initialize(){
     readXmlTheme();
 }
 
+/**
+ * @brief Settings::readXmlTheme
+ */
 void Settings::readXmlTheme(){
     QXmlStreamReader xml;
     QFile *themeFile = new QFile("resources/themes/"+themeName+".xml");
@@ -50,6 +56,11 @@ void Settings::readXmlTheme(){
     std::cout << "Theme '" + themeName.toStdString() + "' loaded" << std::endl;
 }
 
+/**
+ * @brief Settings::toString
+ * Only for development purposes
+ * @return
+ */
 QString Settings::toString(){
     QString str = "";
     str += "Colors : \n";
@@ -59,6 +70,10 @@ QString Settings::toString(){
     return str;
 }
 
+/**
+ * @brief Settings::saveSettings
+ * Writes new settings to the ini file
+ */
 void Settings::saveSettings(){
     QSettings settings("resources/config.ini", QSettings::IniFormat);
     settings.beginGroup("Font");
