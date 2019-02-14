@@ -10,10 +10,15 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
     QHBoxLayout* layout = new QHBoxLayout();
     QVBoxLayout* rightLayout = new QVBoxLayout();
 
-    QListWidget* navList = new QListWidget();
+    QListWidget* navList = new QListWidget(this);
     navList->addItem(new QListWidgetItem(tr("Editor")));
     navList->addItem(new QListWidgetItem(tr("Theme")));
     layout->addWidget(navList, 1);
+
+    // styling navList
+    navList->setStyleSheet("QListWidget::item{"
+                           "height: 25px;"
+                           "}");
 
     tabs = new QTabWidget(this);
 
