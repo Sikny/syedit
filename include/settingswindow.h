@@ -13,6 +13,7 @@
 #include <QGroupBox>
 #include <QFontDatabase>
 #include <QSpinBox>
+#include <QLabel>
 
 #include "settings.h"
 
@@ -35,7 +36,7 @@ private:
     QTabWidget* tabs;
 
     QComboBox *themeChoice, *fontFamily;
-    QSpinBox *fontSize;
+    QSpinBox *fontSize, *tabSize;
 
     QMainWindow* mainWindow;
 };

@@ -171,9 +171,12 @@ void MainWindow::loadTheme(){
     "border-color: " + bgColor + ";"
     "color: " + bgColor + ";"
 "}");
+    QFont fontTmp = Settings::Instance().getFont();
+    int tabSize = Settings::Instance().getTabSize();
     for(int i = 0; i < editors->count(); i++){
         Editor* e = static_cast<Editor*>(editors->widget(i));
-        e->setFont(Settings::Instance().getFont());
+        e->setFont(fontTmp);
+        e->setTabStopWidth(tabSize * QFontMetrics(fontTmp).width(' '));
         e->highlightCurrentLine();
         highlighters.at(i)->rehighlight();
     }

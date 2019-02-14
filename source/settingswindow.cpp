@@ -47,6 +47,8 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
 
     connect(navList, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(handleNavigation(QListWidgetItem*)));
+
+    navList->setCurrentRow(0);
 }
 
 /**
@@ -55,9 +57,9 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
  */
 void SettingsWindow::buildTabsWidgets(){
     QVBoxLayout* layoutEditor = new QVBoxLayout();
-        QGroupBox* fontGroup = new QGroupBox(tr("Font"));
+        QGroupBox* fontGroup = new QGroupBox(tr("Font"), this);
             QHBoxLayout* layoutFont = new QHBoxLayout();
-                fontFamily = new QComboBox();
+                fontFamily = new QComboBox(this);
                 fontFamily->setEditable(true);
                 fontFamily->setInsertPolicy(QComboBox::NoInsert);
                 QFontDatabase fontData;
@@ -65,17 +67,26 @@ void SettingsWindow::buildTabsWidgets(){
                 fontFamily->setCurrentText(Settings::Instance().getFont().family());
                 layoutFont->addWidget(fontFamily);
 
-                fontSize = new QSpinBox();
+                fontSize = new QSpinBox(this);
                 fontSize->setValue(Settings::Instance().getFont().pointSize());
                 layoutFont->addWidget(fontSize);
             fontGroup->setLayout(layoutFont);
         layoutEditor->addWidget(fontGroup);
+        QGroupBox* tabGroup = new QGroupBox(tr("Tab"), this);
+            QHBoxLayout* layoutTab = new QHBoxLayout();
+                QLabel* tabSizeLabel = new QLabel(tr("Tab length"), this);
+                tabSize = new QSpinBox(this);
+                tabSize->setValue(Settings::Instance().getTabSize());
+                layoutTab->addWidget(tabSizeLabel);
+                layoutTab->addWidget(tabSize);
+             tabGroup->setLayout(layoutTab);
+        layoutEditor->addWidget(tabGroup);
     tabs->widget(0)->setLayout(layoutEditor);
 
     QVBoxLayout* layoutTheme = new QVBoxLayout();
-        QGroupBox* themeGroup = new QGroupBox(tr("Theme"));
+        QGroupBox* themeGroup = new QGroupBox(tr("Theme"), this);
             QVBoxLayout* tGrpLayout = new QVBoxLayout();
-                themeChoice = new QComboBox();
+                themeChoice = new QComboBox(this);
                 // reading for theme files
                 QDirIterator dirIter("resources/themes");
                 while(dirIter.hasNext()){
@@ -100,6 +111,7 @@ void SettingsWindow::applySettings(){
     QFont newFont(fontFamily->currentText());
     newFont.setPointSize(fontSize->value());
     Settings::Instance().setFont(newFont);
+    Settings::Instance().setTabSize(tabSize->value());
     Settings::Instance().saveSettings();
     emit settingsModified();
 }
