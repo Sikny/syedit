@@ -15,6 +15,10 @@ void Settings::initialize(){
     font.setPointSize(settings.value("size").toInt());
     settings.endGroup();
 
+    settings.beginGroup("Tab");
+    tabSize = settings.value("tablength").toInt();
+    settings.endGroup();
+
     settings.beginGroup("Theme");
     themeName = settings.value("name").toString();
     settings.endGroup();
@@ -79,6 +83,10 @@ void Settings::saveSettings(){
     settings.beginGroup("Font");
     settings.setValue("family", font.family());
     settings.setValue("size", font.pointSize());
+    settings.endGroup();
+
+    settings.beginGroup("Tab");
+    settings.setValue("tablength", tabSize);
     settings.endGroup();
 
     settings.beginGroup("Theme");

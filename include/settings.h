@@ -37,6 +37,12 @@ public:
     QFont getFont(){
         return this->font;
     }
+    int getTabSize(){
+        return this->tabSize;
+    }
+    void setTabSize(int v){
+        this->tabSize = v;
+    }
     void saveSettings();
 
 private:
@@ -46,6 +52,7 @@ private:
     QString themeName;
     QMap<QString, QColor> colors;
     QFont font;
+    int tabSize;
 };
 
 #endif // THEME_H
