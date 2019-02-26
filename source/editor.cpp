@@ -28,7 +28,7 @@ void Editor::saveFile(){
   QFile file(fileName);
   if(file.open(QFile::WriteOnly)){
     QTextStream out(&file);
-	  out << this->toPlainText().toStdString().c_str();
+      out << this->toPlainText().toLatin1().toStdString().c_str();
   }
 }
 
