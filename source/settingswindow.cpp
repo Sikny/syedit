@@ -16,7 +16,7 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
     layout->addWidget(navList, 1);
 
     // styling navList
-    navList->setStyleSheet("QListWidget::item{"
+    qApp->setStyleSheet("QListWidget::item{"
                            "height: 25px;"
                            "}");
 

@@ -14,6 +14,7 @@
 #include <QFontDatabase>
 #include <QSpinBox>
 #include <QLabel>
+#include <QApplication>
 
 #include "settings.h"
 

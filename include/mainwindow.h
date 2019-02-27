@@ -34,6 +34,9 @@ private:
   SettingsWindow *settingsWin;
 
   QAction* saveAction;
+
+protected:
+  void closeEvent(QCloseEvent*);
 };
 
 #endif

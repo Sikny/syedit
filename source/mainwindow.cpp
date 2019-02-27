@@ -133,6 +133,22 @@ void MainWindow::setHighlighter(Editor* editor, QString& fileName){
  */
 void MainWindow::closeTab(int index){
     Editor* e = static_cast<Editor*>(editors->widget(index));
+    if(editors->tabText(index).at(editors->tabText(index).size()-1) == "●"){
+        QMessageBox messageBox(tr("Confirm close"), tr("There are unsaved changes. Close anyway ?"), QMessageBox::Icon(), QMessageBox::Save, QMessageBox::Discard, QMessageBox::Cancel, this);
+        int ret = messageBox.exec();
+        switch(ret){
+            case QMessageBox::Save:
+                handleSave();   // Save then close
+                break;
+            case QMessageBox::Discard:
+                // Just go to the next (just close)
+                break;
+            case QMessageBox::Cancel:
+                return;
+            default:    // Should never be reached
+                break;
+        }
+    }
     Highlighter* h = highlighters.at(index);
     highlighters.removeAt(index);
     editors->removeTab(index);
@@ -151,7 +167,7 @@ void MainWindow::loadTheme(){
     QString textColor = Settings::Instance().color("text").name();
     QString tabBordCol = Settings::Instance().color("tabborder").name();
     QString notSelTab = Settings::Instance().color("notselected").name();
-    setStyleSheet(
+    qApp->setStyleSheet(
 "MainWindow, MainWindow *, QTabWidget::pane, QTabBar::tab {"
     "background-color: " + bgColor + ";"
     "color: " + textColor + ";}"
@@ -191,4 +207,45 @@ void MainWindow::textEdited(bool changed){
     if(changed)
         editors->setTabText(editors->currentIndex(),
             static_cast<Editor*>(editors->currentWidget())->getFileNameWithoutPath() + " ●");
+}
+
+/**
+ * @brief MainWindow::closeEvent
+ * When user clicks on the "x" button
+ * @param event
+ */
+void MainWindow::closeEvent (QCloseEvent *event)
+{
+    bool someNotSaved = false;
+    for(int i = 0; i < editors->count(); i++)
+        if(editors->tabText(i).at(editors->tabText(i).size()-1) == "●")
+            someNotSaved = true;
+    if(someNotSaved){
+        QMessageBox messageBox(tr("Confirm close"), tr("There are unsaved changes. Close anyway ?"), QMessageBox::Icon(), QMessageBox::SaveAll, QMessageBox::Discard, QMessageBox::Cancel, this);
+        int ret = messageBox.exec();
+        bool doSave = false;
+        switch(ret){
+            case QMessageBox::Save:
+                doSave = true;
+                break;
+            case QMessageBox::Discard:
+                doSave = false;
+                break;
+            case QMessageBox::Cancel:
+                return;
+            default:    // Should never be reached
+                break;
+        }
+        while(editors->count() > 0){
+            if(doSave)
+                handleSave();
+            int index = editors->currentIndex();
+            Highlighter* h = highlighters.at(index);
+            highlighters.removeAt(index);
+            editors->removeTab(index);
+            if(editors->count() < 1)
+                saveAction->setDisabled(true);
+            delete h;
+        }   // no need to break there
+    }
 }
