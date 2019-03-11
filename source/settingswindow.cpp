@@ -16,7 +16,7 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
     layout->addWidget(navList, 1);
 
     // styling navList
-    qApp->setStyleSheet("QListWidget::item{"
+    qApp->setStyleSheet(qApp->styleSheet() + "QListWidget::item{"
                            "height: 25px;"
                            "}");
 
@@ -30,25 +30,28 @@ SettingsWindow::SettingsWindow(QMainWindow* mainWin) : QWidget()
 
     rightLayout->addWidget(tabs);
     this->setLayout(layout);
-    this->setFixedSize(sizeHint());
 
     buildTabsWidgets();
 
     QHBoxLayout* confirmButtons = new QHBoxLayout();
     QPushButton* applyB = new QPushButton(tr("Apply"));
     connect(applyB, SIGNAL(clicked()), this, SLOT(applySettings()));
+    QPushButton* applyNCloseB = new QPushButton(tr("Apply and Close"));
+    connect(applyNCloseB, SIGNAL(clicked()), this, SLOT(applyAndCloseSettings()));
     QPushButton* cancelB = new QPushButton(tr("Cancel"));
     connect(cancelB, SIGNAL(clicked()), this, SLOT(close()));
     confirmButtons->addWidget(applyB);
+    confirmButtons->addWidget(applyNCloseB);
     confirmButtons->addWidget(cancelB);
 
     rightLayout->addLayout(confirmButtons, 5);
-    layout->addLayout(rightLayout);
+    layout->addLayout(rightLayout, 2);
 
     connect(navList, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(handleNavigation(QListWidgetItem*)));
 
     navList->setCurrentRow(0);
+    this->setFixedSize(sizeHint());
 }
 
 /**
@@ -114,6 +117,11 @@ void SettingsWindow::applySettings(){
     Settings::Instance().setTabSize(tabSize->value());
     Settings::Instance().saveSettings();
     emit settingsModified();
+}
+
+void SettingsWindow::applyAndCloseSettings(){
+    applySettings();
+    close();
 }
 
 /**

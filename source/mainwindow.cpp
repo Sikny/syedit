@@ -6,6 +6,9 @@ MainWindow::MainWindow(QStringList argv, QWidget * parent) : QMainWindow(parent)
 
   Settings::Instance().initialize();
 
+  lineCol = new QLabel(tr("Ready"), this);
+  statusBar()->addPermanentWidget(lineCol);
+
   editors = new QTabWidget(this);
   editors->setTabsClosable(true);
   connect(editors, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
@@ -42,6 +45,7 @@ MainWindow::MainWindow(QStringList argv, QWidget * parent) : QMainWindow(parent)
   connect(openAction, SIGNAL(triggered()), this, SLOT(handleOpen()));
 
   connect(settingsAction, SIGNAL(triggered()), settingsWin, SLOT(show()));
+
   loadTheme();
   saveAction->setDisabled(true);
 
@@ -66,8 +70,9 @@ MainWindow::MainWindow(QStringList argv, QWidget * parent) : QMainWindow(parent)
  * later @see MainWindow::handleSave()
  */
 void MainWindow::handleNew(){
-  QString fileName = QFileDialog::getSaveFileName(this, tr("New File"),
+    QString fileName = QFileDialog::getSaveFileName(this, tr("New File"),
 		QStandardPaths::displayName(QStandardPaths::DocumentsLocation));
+    qDebug(qPrintable(fileName));
 	if(!fileName.isEmpty()){
 		std::cout << fileName.toStdString() << std::endl;
         Editor* e = new Editor(editors);
@@ -76,8 +81,10 @@ void MainWindow::handleNew(){
         setHighlighter(e, fileName);
         editors->setCurrentWidget(e);
         connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
+        connect(e, SIGNAL(cursorPositionChanged()), this, SLOT(updateStatusBar()));
         saveAction->setEnabled(true);
-	}
+        updateStatusBar();
+    }
 }
 
 /**
@@ -96,9 +103,11 @@ void MainWindow::handleOpen(){
             setHighlighter(e, fileName);
             editors->setCurrentWidget(e);
             connect(e, SIGNAL(modificationChanged(bool)), this, SLOT(textEdited(bool)));
+            connect(e, SIGNAL(cursorPositionChanged()), this, SLOT(updateStatusBar()));
         }
         saveAction->setEnabled(true);
-	}
+        updateStatusBar();
+    }
 }
 
 /**
@@ -156,6 +165,8 @@ void MainWindow::closeTab(int index){
         saveAction->setDisabled(true);
     delete h;
     delete e;
+    if(editors->count() > 0)
+        updateStatusBar();
 }
 
 /**
@@ -167,8 +178,8 @@ void MainWindow::loadTheme(){
     QString textColor = Settings::Instance().color("text").name();
     QString tabBordCol = Settings::Instance().color("tabborder").name();
     QString notSelTab = Settings::Instance().color("notselected").name();
-    qApp->setStyleSheet(
-"MainWindow, MainWindow *, QTabWidget::pane, QTabBar::tab {"
+    qApp->setStyleSheet(qApp->styleSheet()
++"MainWindow, MainWindow *, QTabWidget::pane, QTabBar::tab {"
     "background-color: " + bgColor + ";"
     "color: " + textColor + ";}"
 "Editor{border: none;}"
@@ -186,7 +197,8 @@ void MainWindow::loadTheme(){
     "background-color: " + notSelTab + ";"
     "border-color: " + bgColor + ";"
     "color: " + bgColor + ";"
-"}");
+"}"
+"QStatusBar::item{border: none;}");
     QFont fontTmp = Settings::Instance().getFont();
     int tabSize = Settings::Instance().getTabSize();
     for(int i = 0; i < editors->count(); i++){
@@ -232,6 +244,7 @@ void MainWindow::closeEvent (QCloseEvent *event)
                 doSave = false;
                 break;
             case QMessageBox::Cancel:
+                event->ignore();
                 return;
             default:    // Should never be reached
                 break;
@@ -248,4 +261,16 @@ void MainWindow::closeEvent (QCloseEvent *event)
             delete h;
         }   // no need to break there
     }
+}
+
+/**
+ * @brief MainWindow::updateStatusBar
+ * updates line and column numbers in status bar
+ */
+void MainWindow::updateStatusBar(){
+    Editor* e = static_cast<Editor*>(editors->widget(editors->currentIndex()));
+    int lineNumber = e->textCursor().block().firstLineNumber()+1;
+    int colNumber = e->textCursor().columnNumber();
+    lineCol->setText("Line: " + QString::number(lineNumber)
+                     +", Col: " + QString::number(colNumber));
 }

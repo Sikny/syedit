@@ -25,13 +25,13 @@ public:
     SettingsWindow(QMainWindow* mainWin);
     void buildTabsWidgets();
 
-
 signals:
     void settingsModified();
 
 public slots:
     void handleNavigation(QListWidgetItem* item);
     void applySettings();
+    void applyAndCloseSettings();
 
 private:
     QTabWidget* tabs;

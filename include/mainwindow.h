@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QFileInfo>
+#include <QStatusBar>
+#include <QLabel>
 
 #include <iostream>
 
@@ -18,6 +20,7 @@ Q_OBJECT
 public:
   MainWindow(QStringList argv, QWidget* parent = nullptr);
   void setHighlighter(Editor* editor, QString& fileName);
+  void buildStatusBar();
 
 public slots:
   void handleNew();
@@ -26,6 +29,7 @@ public slots:
   void loadTheme();
   void closeTab(int);
   void textEdited(bool);
+  void updateStatusBar();
 
 private:
   QTabWidget* editors;
@@ -34,6 +38,7 @@ private:
   SettingsWindow *settingsWin;
 
   QAction* saveAction;
+  QLabel *lineCol;
 
 protected:
   void closeEvent(QCloseEvent*);
