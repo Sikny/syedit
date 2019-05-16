@@ -95,7 +95,7 @@ void Highlighter::highlightLine(const QString &text, const QString &expression,
     QTextCharFormat myClassFormat;
     myClassFormat.setForeground(color);
 
-    QRegularExpression exp(expression);
+    QRegularExpression exp(expression, QRegularExpression::CaseInsensitiveOption);
     QRegularExpressionMatchIterator i = exp.globalMatch(text);
     while (i.hasNext())
     {
